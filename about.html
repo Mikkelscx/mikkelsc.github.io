@@ -5,64 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Me - Mikkel's Portfolio</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body.about-page {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .about-page {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .about-content {
+            max-width: 800px;
+            margin: 120px auto 40px;
+            padding: 2.5rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            gap: 1rem;
+            width: 100%;
+        }
+        
+        .picture-container {
+            flex: 1;
+            text-align: center;
+            max-width: 150px;
+        }
+        
+        .about-picture {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .centered-text {
+            flex: 2;
+            text-align: center;
+            background: transparent !important;
+        }
+        
+        .centered-text h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .about-text {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        
+        .about-text p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .highlight-text {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .cocktail-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
-<body>
+<body class="about-page">
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="index.html" class="nav-link">HOME</a>
+                    <a href="index.html" class="nav-link">HJEM</a>
                 </li>
                 <li class="nav-item">
-                    <a href="projects.html" class="nav-link">PROJECTS</a>
+                    <a href="projects.html" class="nav-link">PROJEKTER</a>
                 </li>
                 <li class="nav-item">
-                    <a href="about.html" class="nav-link">ABOUT ME</a>
+                    <a href="about.html" class="nav-link">OM MIG</a>
                 </li>
                 <li class="nav-item">
-                    <a href="contact.html" class="nav-link">CONTACT ME</a>
+                    <a href="contact.html" class="nav-link">KONTAKT</a>
                 </li>
                 <li class="nav-item">
-                    <a href="ai-universe.html" class="nav-link">MY AI UNIVERSE</a>
+                    <a href="ai-universe.html" class="nav-link">MIN AI UNIVERS</a>
                 </li>
             </ul>
         </div>
     </nav>
 
     <!-- Back Button -->
-    <a href="index.html" class="back-button">← Back to Home</a>
+    <a href="index.html" class="back-button">← Tilbage til Hjem</a>
 
     <!-- Page Content -->
-    <div class="page-content">
-        <!-- Hero Section with Two Pictures and Centered Text -->
-        <div class="hero-section">
-            <div class="picture-container">
-                <img src="assets/image-c63d5bed-4201-4e9f-8483-9b4aeb496f32.png.webp" alt="Brain Image" class="about-picture">
+    <div class="about-content">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 3rem; gap: 1rem;">
+            <div style="text-align: center; max-width: 150px;">
+                <img src="assets/image-c63d5bed-4201-4e9f-8483-9b4aeb496f32.png.webp" alt="Brain Image" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             </div>
-            <div class="centered-text">
-                <h1>HVEM ER MIKKEL</h1>
-            </div>
-            <div class="picture-container">
-                <img src="assets/image-f08d7171-5c1b-482c-9da1-28d655717af2.png.webp" alt="Brain Image" class="about-picture">
+            <h1 style="text-align: center; font-size: 2.5rem; font-weight: bold; color: #333; margin: 0; text-transform: uppercase; letter-spacing: 2px; flex: 2;">HVEM ER MIKKEL</h1>
+            <div style="text-align: center; max-width: 150px;">
+                <img src="assets/image-f08d7171-5c1b-482c-9da1-28d655717af2.png.webp" alt="Brain Image" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             </div>
         </div>
-        <p>Tidligere mange ting. Tidligere cocktailbartender, tidligere filminstruktørelev, tidligere manuskriptstuderende.</p>
-        <p>Så hvorfor tekstforfatter?</p>
-        <p>Jeg har arbejdet meget bag en bar, og på mange måder elskede jeg det.</p>
-        <p>Jeg har altid ønsket at give mine gæster en særlig oplevelse – ved at bruge overraskende ingredienser, nye teknikker eller bare god, klassisk mixolog-viden.</p>
-        <p>Det, jeg fandt virkelig interessant var, hvordan man sælger de "svære at sælge" drinks – for folk har ikke altid lyst til at prøve noget nyt.</p>
-        <p>Og det var dér, jeg fandt ud af, at ord kan sælge.</p>
         
-        <p>Dette er mit bud på den klassiske Mojito.</p>
-        <p>For nogle måske bare en fancy version af en oldschool cocktail.</p>
-        <p>Nej nej nej – det er alt for simpelt.</p>
-        <p>Det her er en Mojito sphere.</p>
-        <p>En cocktail, der eksploderer, så snart den rammer tungen – med de smukkeste urtenoter fra mynten, som ikke bare dækker bagsiden af din tunge, men også rejser direkte op gennem næsen.</p>
-        <p>Snart følger den friske smag af lime, der breder sig ud over tungens sider – inden rejsen afsluttes med en eksplosion af vidunderlig sødme fra rommen.</p>
-        <p>Sådan sælger man en cocktail.</p>
-        <p>Jeg ved, jeg har mange sider – nogle er meget seriøse, og andre er mere fjollede.</p>
-        <p>Jeg ser det som en styrke, for jeg vil gerne røre folk med mine ord – og få dem til at grine.</p>
+        <div class="about-text">
+            <p>Tidligere mange ting. Tidligere cocktailbartender, tidligere filminstruktørelev, tidligere manuskriptstuderende.</p>
+            <p>Så hvorfor tekstforfatter?</p>
+            <p>Jeg har arbejdet meget bag en bar, og på mange måder elskede jeg det.</p>
+            <p>Jeg har altid ønsket at give mine gæster en særlig oplevelse – ved at bruge overraskende ingredienser, nye teknikker eller bare god, klassisk mixolog-viden.</p>
+            <p>Det, jeg fandt virkelig interessant var, hvordan man sælger de "svære at sælge" drinks – for folk har ikke altid lyst til at prøve noget nyt.</p>
+            <p>Og det var dér, jeg fandt ud af, at <span class="highlight-text">ord kan sælge</span>.</p>
+            
+            <img src="assets/abot me asset 3.jpg.webp" alt="Cocktail Mojito Sphere" class="cocktail-image" style="display: block; margin: 2rem auto;">
+            
+            <p>Dette er mit bud på den klassiske Mojito.</p>
+            <p>For nogle måske bare en fancy version af en oldschool cocktail.</p>
+            <p>Nej nej nej – det er alt for simpelt.</p>
+            <p>Det her er en <span class="highlight-text">Mojito sphere</span>.</p>
+            <p>En cocktail, der eksploderer, så snart den rammer tungen – med de smukkeste urtenoter fra mynten, som ikke bare dækker bagsiden af din tunge, men også rejser direkte op gennem næsen.</p>
+            <p>Snart følger den friske smag af lime, der breder sig ud over tungens sider – inden rejsen afsluttes med en eksplosion af vidunderlig sødme fra rommen.</p>
+            <p><span class="highlight-text">Sådan sælger man en cocktail.</span></p>
+            <p>Jeg ved, jeg har mange sider – nogle er meget seriøse, og andre er mere fjollede.</p>
+            <p>Jeg ser det som en styrke, for jeg vil gerne røre folk med mine ord – og få dem til at grine.</p>
+        </div>
     </div>
 
     <script src="script.js"></script>
