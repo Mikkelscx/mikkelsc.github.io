@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Mikkel's Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">HOME</a>
+                </li>
+                <li class="nav-item">
+                    <a href="projects.html" class="nav-link">PROJECTS</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">ABOUT ME</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">CONTACT ME</a>
+                </li>
+                <li class="nav-item">
+                    <a href="ai-universe.html" class="nav-link">MY AI UNIVERSE</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Brainstorm Container -->
+    <div class="brainstorm-container">
+        <!-- Connecting Lines SVG -->
+        <svg class="connecting-lines" width="100%" height="100%" style="position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none;">
+            <!-- Lines will be dynamically positioned by JavaScript -->
+        </svg>
+        <!-- Effects layer (behind brain) -->
+        <div class="fart-layer" aria-hidden="true"></div>
+        
+        <!-- Brain -->
+        <div class="brain">
+            <svg viewBox="0 0 100 100" width="200" height="200" aria-label="Brain">
+                <image href="assets/brain-cartoon.png" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice" />
+                <!-- Eyes group for animation -->
+                <g class="eyes-group">
+                    <!-- Eyes (sclera) -->
+                    <circle class="eye sclera left" cx="35" cy="45" r="6" fill="#fff"></circle>
+                    <circle class="eye sclera right" cx="65" cy="45" r="6" fill="#fff"></circle>
+                    <!-- Pupils -->
+                    <circle class="pupil left" cx="36" cy="44" r="2.2" fill="#000"></circle>
+                    <circle class="pupil right" cx="66" cy="44" r="2.2" fill="#000"></circle>
+                </g>
+                <!-- Wider smile -->
+                <path class="brain-mouth" d="M38,58 Q50,61 62,58" stroke="#000" stroke-width="2" fill="transparent"></path>
+            </svg>
+        </div>
+
+        <!-- Project Nodes -->
+        <a href="byens-landhandel.html" class="project-node" style="top: 5%; left: 10%;">
+            Byens Landhandel
+        </a>
+        
+
+        
+        <a href="Naturli'.html" class="project-node" style="top: 8%; right: 8%;">
+            NATURLI'
+        </a>
+        
+        <a href="repop.html" class="project-node" style="top: 20%; left: 3%;">
+            REPOP BY DEPOP
+        </a>
+        
+        <a href="durex.html" class="project-node" style="top: 25%; right: 3%;">
+            DUREX X GUESS WHO
+        </a>
+        
+        <a href="project1.html" class="project-node" style="top: 40%; left: 5%;">
+            BRAINFARTS
+        </a>
+        
+        <a href="kobajer.html" class="project-node" style="bottom: 30%; left: 8%;">
+            KØ-BAJER
+        </a>
+        
+        <a href="twister.html" class="project-node" style="bottom: 20%; left: 15%;">
+            TWISTER
+        </a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
