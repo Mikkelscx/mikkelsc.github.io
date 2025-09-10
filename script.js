@@ -13,244 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	// Bigger and happier smile effect when hovering over project nodes
-	const projectNodes = document.querySelectorAll('.project-node');
-	const brainMouth = document.querySelector('.brain-mouth');
-	const eyesGroup = document.querySelector('.eyes-group');
-	
-	if (brainMouth && projectNodes.length > 0) {
-		projectNodes.forEach((node) => {
-			node.addEventListener('mouseenter', function() {
-				// Check if this is the BRAINFARTS node
-				if (node.textContent.trim() === 'BRAINFARTS') {
-					// Smile for BRAINFARTS and emit fart clouds
-					brainMouth.setAttribute('d', 'M38,58 Q50,75 62,58');
-					brainMouth.style.transition = 'd 300ms ease';
-					if (eyesGroup) {
-						eyesGroup.classList.add('eyes-smile');
-					}
-					emitFartClouds();
-				} else {
-					// Normal smile animation for other nodes
-					brainMouth.setAttribute('d', 'M38,58 Q50,75 62,58');
-					brainMouth.style.transition = 'd 300ms ease';
-					if (eyesGroup) {
-						eyesGroup.classList.add('eyes-smile');
-					}
-				}
-			});
-			node.addEventListener('mouseleave', function() {
-				// Return to neutral expression
-				brainMouth.setAttribute('d', 'M38,58 Q50,61 62,58');
-				brainMouth.style.transition = 'd 300ms ease';
-				if (eyesGroup) {
-					eyesGroup.classList.remove('eyes-smile');
-				}
-			});
-		});
-	}
 
-	// Pupils follow cursor
-	const brainSvg = document.querySelector('.brain svg');
-	const leftPupil = document.querySelector('.brain svg .pupil.left');
-	const rightPupil = document.querySelector('.brain svg .pupil.right');
-
-	// Centers in SVG viewBox units (match initial cx/cy in HTML)
-	const leftCenter = { x: 36, y: 44 };
-	const rightCenter = { x: 66, y: 44 };
-	const maxOffset = 2.5; // how far pupils can move from center
-
-	let rafId = null;
-	let targetMouse = null;
-
-	function updatePupils(mouse) {
-		if (!brainSvg || !leftPupil || !rightPupil || !mouse) return;
-
-		const rect = brainSvg.getBoundingClientRect();
-		// Convert mouse to SVG viewBox coordinates (0..100)
-		const mouseX = ((mouse.clientX - rect.left) / rect.width) * 100;
-		const mouseY = ((mouse.clientY - rect.top) / rect.height) * 100;
-
-		function computeOffset(center) {
-			const dx = mouseX - center.x;
-			const dy = mouseY - center.y;
-			const dist = Math.hypot(dx, dy) || 1;
-			const scale = Math.min(maxOffset, dist) / dist;
-			return { x: dx * scale, y: dy * scale };
-		}
-
-		const leftOffset = computeOffset(leftCenter);
-		const rightOffset = computeOffset(rightCenter);
-
-		leftPupil.setAttribute('cx', (leftCenter.x + leftOffset.x).toFixed(2));
-		leftPupil.setAttribute('cy', (leftCenter.y + leftOffset.y).toFixed(2));
-		rightPupil.setAttribute('cx', (rightCenter.x + rightOffset.x).toFixed(2));
-		rightPupil.setAttribute('cy', (rightCenter.y + rightOffset.y).toFixed(2));
-	}
-
-	function onMouseMove(e) {
-		targetMouse = e;
-		if (rafId === null) {
-			rafId = requestAnimationFrame(() => {
-				updatePupils(targetMouse);
-				rafId = null;
-			});
-		}
-	}
-
-	if (brainSvg && leftPupil && rightPupil) {
-		window.addEventListener('mousemove', onMouseMove);
-		// Return pupils to center when leaving the brain area
-		brainSvg.addEventListener('mouseleave', () => {
-			leftPupil.setAttribute('cx', leftCenter.x);
-			leftPupil.setAttribute('cy', leftCenter.y);
-			rightPupil.setAttribute('cx', rightCenter.x);
-			rightPupil.setAttribute('cy', rightCenter.y);
-		});
-	}
-
-	// Fallback subtle movement if SVG eyes (sclera) exist but not pupils
-	const brainEyes = document.querySelectorAll('.brain svg circle[cx="35"], .brain svg circle[cx="65"]');
-	const brain = document.querySelector('.brain');
-	if (brainEyes.length > 0 && brain && !(leftPupil && rightPupil)) {
-		let time = 0;
-		function animateEyes() {
-			time += 0.02;
-			const moveX = Math.sin(time) * 0.5;
-			const moveY = Math.cos(time * 0.7) * 0.3;
-			const leftEye = document.querySelector('.brain svg circle[cx="35"]');
-			if (leftEye) {
-				leftEye.setAttribute('cx', 35 + moveX);
-				leftEye.setAttribute('cy', 32 + moveY);
-			}
-			const rightEye = document.querySelector('.brain svg circle[cx="65"]');
-			if (rightEye) {
-				rightEye.setAttribute('cx', 65 + moveX);
-				rightEye.setAttribute('cy', 32 + moveY);
-			}
-			requestAnimationFrame(animateEyes);
-		}
-		animateEyes();
-	}
-
-	// Emit fart clouds behind the brain when hovering BRAINFARTS
-	function emitFartClouds() {
-		const layer = document.querySelector('.fart-layer');
-		if (!layer) return;
-		for (let i = 0; i < 8; i++) {
-			const cloud = document.createElement('div');
-			cloud.className = 'fart-cloud ' + (i % 2 === 0 ? 'light' : 'dark') + (i % 3 === 0 ? ' v2' : i % 5 === 0 ? ' v3' : '');
-			// Random starting position slightly to the left-back of brain center
-			const startX = -40 - Math.random() * 30; // left
-			const startY = 20 - Math.random() * 40;  // around middle
-			cloud.style.left = `calc(50% + ${startX}px)`;
-			cloud.style.top = `calc(50% + ${startY}px)`;
-			cloud.style.animationDelay = `${Math.random() * 0.2}s`;
-			cloud.style.transform = `translate(-50%, -50%)`;
-			layer.appendChild(cloud);
-			// Cleanup after animation
-			setTimeout(() => {
-				cloud.remove();
-			}, 1600);
-		}
-	}
-
-	// Arrange project nodes in an equal-spaced circle around the brain (projects page)
-	const container = document.querySelector('.brainstorm-container');
-	if (container && projectNodes.length > 0) {
-		function layoutNodesInCircle() {
-			const rect = container.getBoundingClientRect();
-			const cx = rect.width / 2;
-			const cy = rect.height / 2;
-			// Radius based on container size, leaving room for the 200px brain and node size
-			const radius = Math.max(180, Math.min(cx, cy) - 160);
-			projectNodes.forEach((node, index) => {
-				const angle = (index / projectNodes.length) * Math.PI * 2 - Math.PI / 2; // start at top
-				const x = cx + radius * Math.cos(angle);
-				const y = cy + radius * Math.sin(angle);
-				node.style.position = 'absolute';
-				node.style.left = `${x}px`;
-				node.style.top = `${y}px`;
-				node.style.transform = 'translate(-50%, -50%)';
-			});
-			// Recreate lines after positioning nodes
-			if (typeof createConnectingLines === 'function') {
-				createConnectingLines();
-			}
-		}
-		layoutNodesInCircle();
-		window.addEventListener('resize', layoutNodesInCircle);
-	}
-
-	// Create connecting lines for mindmap effect
-	function createConnectingLines() {
-		const connectingLines = document.querySelector('.connecting-lines');
-		const brain = document.querySelector('.brain');
-		const projectNodes = document.querySelectorAll('.project-node');
-		
-		if (!connectingLines || !brain || projectNodes.length === 0) return;
-		
-		// Clear existing lines
-		connectingLines.innerHTML = '';
-		
-		// Get brain center and radius
-		const brainRect = brain.getBoundingClientRect();
-		const brainCenterX = brainRect.left + brainRect.width / 2;
-		const brainCenterY = brainRect.top + brainRect.height / 2;
-		const brainRadius = brainRect.width / 2; // Brain is 200px, so radius is 100px
-		
-		// Create line for each project node
-		projectNodes.forEach((node, index) => {
-			const nodeRect = node.getBoundingClientRect();
-			const nodeCenterX = nodeRect.left + nodeRect.width / 2;
-			const nodeCenterY = nodeRect.top + nodeRect.height / 2;
-			
-			// Calculate direction from brain to node
-			const dx = nodeCenterX - brainCenterX;
-			const dy = nodeCenterY - brainCenterY;
-			const distance = Math.sqrt(dx * dx + dy * dy);
-			
-			// Normalize direction
-			const dirX = dx / distance;
-			const dirY = dy / distance;
-			
-			// Calculate brain edge point (start of line)
-			const brainEdgeX = brainCenterX + dirX * brainRadius;
-			const brainEdgeY = brainCenterY + dirY * brainRadius;
-			
-			// Calculate node edge point (end of line) - connect to the actual node edge
-			const nodeRadius = Math.max(nodeRect.width, nodeRect.height) / 2;
-			const nodeEdgeX = nodeCenterX - dirX * nodeRadius;
-			const nodeEdgeY = nodeCenterY - dirY * nodeRadius;
-			
-			// Calculate line coordinates relative to SVG
-			const svgRect = connectingLines.getBoundingClientRect();
-			const startX = brainEdgeX - svgRect.left;
-			const startY = brainEdgeY - svgRect.top;
-			const endX = nodeEdgeX - svgRect.left;
-			const endY = nodeEdgeY - svgRect.top;
-			
-			// Create SVG line
-			const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-			line.setAttribute('x1', startX);
-			line.setAttribute('y1', startY);
-			line.setAttribute('x2', endX);
-			line.setAttribute('y2', endY);
-			line.setAttribute('stroke', '#667eea');
-			line.setAttribute('stroke-width', '2');
-			line.setAttribute('stroke-dasharray', '5,5');
-			line.setAttribute('opacity', '0.6');
-			line.classList.add('mindmap-line');
-			
-			connectingLines.appendChild(line);
-		});
-	}
-
-	// Update connecting lines on window resize
-	window.addEventListener('resize', createConnectingLines);
-
-	// Create connecting lines when page loads
-	setTimeout(createConnectingLines, 500); // Longer delay to ensure elements are positioned
 
 
 
@@ -287,6 +50,362 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 	console.log('Portfolio website loaded successfully!');
+
+	// Brain animations and connecting lines
+	function initBrainAnimations() {
+		const brain = document.querySelector('.brain');
+		const nodes = document.querySelectorAll('.project-node');
+		const pupils = document.querySelectorAll('.pupil');
+		const mouth = document.querySelector('.brain-mouth');
+		const svg = document.querySelector('.connecting-lines');
+		const fartLayer = document.querySelector('.fart-layer');
+		
+		if (!brain || !nodes.length) return;
+
+		// Create fart clouds
+		function createFartClouds() {
+			if (!fartLayer) return;
+			
+			for (let i = 0; i < 3; i++) {
+				const cloud = document.createElement('div');
+				cloud.className = 'fart-cloud';
+				cloud.style.cssText = `
+					position: absolute;
+					width: 20px;
+					height: 20px;
+					background: radial-gradient(circle, rgba(139, 69, 19, 0.6) 0%, rgba(139, 69, 19, 0.3) 50%, transparent 100%);
+					border-radius: 50%;
+					animation: fartFloat ${3 + Math.random() * 2}s ease-in-out infinite;
+					animation-delay: ${Math.random() * 2}s;
+					left: ${50 + Math.random() * 20}%;
+					top: ${60 + Math.random() * 20}%;
+				`;
+				fartLayer.appendChild(cloud);
+			}
+		}
+
+		// Create asset elements
+		function createAssets() {
+			console.log('Creating assets...');
+			
+			// Condom asset for Durex
+			const condomAsset = document.createElement('img');
+			condomAsset.src = 'assets/kondom asset.webp';
+			condomAsset.className = 'condom-asset';
+			condomAsset.style.cssText = `
+				position: absolute;
+				width: 60px;
+				height: auto;
+				top: 40%;
+				left: 60%;
+				opacity: 0;
+				display: none;
+				z-index: 10;
+			`;
+			brain.appendChild(condomAsset);
+			console.log('Condom asset created');
+
+			// Korn asset for Byens Landhandel
+			const kornAsset = document.createElement('img');
+			kornAsset.src = 'assets/korn asset.webp';
+			kornAsset.className = 'korn-asset';
+			kornAsset.style.cssText = `
+				position: absolute;
+				width: 80px;
+				height: auto;
+				top: 20%;
+				left: 50%;
+				opacity: 0;
+				display: none;
+				z-index: 10;
+			`;
+			brain.appendChild(kornAsset);
+
+			// Kasket asset for Repop
+			const kasketAsset = document.createElement('img');
+			kasketAsset.src = 'assets/Kasket asset.webp';
+			kasketAsset.className = 'kasket-asset';
+			kasketAsset.style.cssText = `
+				position: absolute;
+				width: 70px;
+				height: auto;
+				top: 10%;
+				left: 50%;
+				opacity: 0;
+				display: none;
+				z-index: 10;
+			`;
+			brain.appendChild(kasketAsset);
+
+			// Øldåse asset for Købajer
+			const oldaseAsset = document.createElement('img');
+			oldaseAsset.src = 'assets/øldåse asset.webp';
+			oldaseAsset.className = 'oldase-asset';
+			oldaseAsset.style.cssText = `
+				position: absolute;
+				width: 50px;
+				height: auto;
+				top: 50%;
+				left: 20%;
+				opacity: 0;
+				display: none;
+				z-index: 10;
+			`;
+			brain.appendChild(oldaseAsset);
+
+			// Naturli' asset
+			const naturliAsset = document.createElement('img');
+			naturliAsset.src = 'assets/Naturli\' asset.webp';
+			naturliAsset.className = 'naturli-asset';
+			naturliAsset.style.cssText = `
+				position: absolute;
+				width: 60px;
+				height: auto;
+				top: 30%;
+				right: 20%;
+				opacity: 0;
+				display: none;
+				z-index: 10;
+			`;
+			brain.appendChild(naturliAsset);
+
+			// Naturli' drops asset
+			const dropsAsset = document.createElement('img');
+			dropsAsset.src = 'asset drops naturlig.png';
+			dropsAsset.className = 'naturli-drops-asset';
+			dropsAsset.style.cssText = `
+				position: absolute;
+				width: 40px;
+				height: auto;
+				top: 15%;
+				right: 25%;
+				opacity: 0;
+				display: none;
+				z-index: 10;
+			`;
+			brain.appendChild(dropsAsset);
+
+			// Twister asset
+			const twisterAsset = document.createElement('img');
+			twisterAsset.src = 'assets/Twister asset.webp';
+			twisterAsset.className = 'twister-asset';
+			twisterAsset.style.cssText = `
+				position: absolute;
+				width: 70px;
+				height: auto;
+				top: 60%;
+				right: 30%;
+				opacity: 0;
+				display: none;
+				z-index: 10;
+			`;
+			brain.appendChild(twisterAsset);
+
+			// Unge mod UV asset
+			const ungeModUvAsset = document.createElement('img');
+			ungeModUvAsset.src = 'assets/Unge mod UV asset.webp';
+			ungeModUvAsset.className = 'unge-mod-uv-asset';
+			ungeModUvAsset.style.cssText = `
+				position: absolute;
+				width: 80px;
+				height: auto;
+				top: 25%;
+				left: 30%;
+				opacity: 0;
+				display: none;
+				z-index: 10;
+			`;
+			brain.appendChild(ungeModUvAsset);
+		}
+
+		// Create connecting lines from brain to nodes
+		function createConnectingLines() {
+			if (!svg) return;
+			
+			// Clear existing lines
+			svg.innerHTML = '';
+			
+			const container = document.querySelector('.brainstorm-container');
+			const brainRect = brain.getBoundingClientRect();
+			const containerRect = container.getBoundingClientRect();
+			
+			// Calculate center of brain relative to container
+			const centerX = brainRect.left - containerRect.left + brainRect.width / 2;
+			const centerY = brainRect.top - containerRect.top + brainRect.height / 2;
+			
+			nodes.forEach(node => {
+				const nodeRect = node.getBoundingClientRect();
+				const nodeX = nodeRect.left - containerRect.left + nodeRect.width / 2;
+				const nodeY = nodeRect.top - containerRect.top + nodeRect.height / 2;
+				
+				// Create line element
+				const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+				line.setAttribute('x1', centerX);
+				line.setAttribute('y1', centerY);
+				line.setAttribute('x2', nodeX);
+				line.setAttribute('y2', nodeY);
+				line.setAttribute('stroke', '#333');
+				line.setAttribute('stroke-width', '2');
+				line.setAttribute('opacity', '0.6');
+				
+				svg.appendChild(line);
+			});
+		}
+
+		// Mouse follow for pupils - ULTRA CONSERVATIVE fixed range
+		function updatePupilPosition(e) {
+			pupils.forEach(pupil => {
+				const eye = pupil.parentElement;
+				const eyeRect = eye.getBoundingClientRect();
+				const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+				const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+				
+				// FIXED small movement range - only 3 pixels maximum
+				const maxMoveDistance = 3; // Fixed 3 pixel limit
+				
+				const deltaX = e.clientX - eyeCenterX;
+				const deltaY = e.clientY - eyeCenterY;
+				const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+				
+				// ULTRA CONSERVATIVE - pupils can only move 3 pixels maximum
+				let moveX, moveY;
+				if (distance <= maxMoveDistance) {
+					// Mouse is within tiny safe zone
+					moveX = deltaX;
+					moveY = deltaY;
+				} else {
+					// Mouse is outside tiny safe zone - constrain to 3 pixel edge
+					const angle = Math.atan2(deltaY, deltaX);
+					moveX = Math.cos(angle) * maxMoveDistance;
+					moveY = Math.sin(angle) * maxMoveDistance;
+				}
+				
+				// Apply movement with ULTRA CONSERVATIVE bounds
+				pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
+			});
+		}
+
+		// Node hover effects
+		nodes.forEach(node => {
+			node.addEventListener('mouseenter', function() {
+				const href = this.getAttribute('href');
+				console.log('Hovering over:', href);
+				const condomAsset = document.querySelector('.condom-asset');
+				const kornAsset = document.querySelector('.korn-asset');
+				const kasketAsset = document.querySelector('.kasket-asset');
+				const oldaseAsset = document.querySelector('.oldase-asset');
+				const naturliAsset = document.querySelector('.naturli-asset');
+				const dropsAsset = document.querySelector('.naturli-drops-asset');
+				const twisterAsset = document.querySelector('.twister-asset');
+				const ungeModUvAsset = document.querySelector('.unge-mod-uv-asset');
+				
+				// Different expressions and assets for different projects
+				if (href.includes('durex')) {
+					// Durex - show condom asset
+					console.log('Durex hover detected, showing condom asset');
+					if (condomAsset) {
+						condomAsset.style.display = 'block';
+						condomAsset.style.animation = 'condomAppear 0.5s ease-in-out forwards';
+						console.log('Condom asset should be visible now');
+					} else {
+						console.log('Condom asset not found');
+					}
+				} else if (href.includes('byens-landhandel')) {
+					// Byens Landhandel - show korn asset
+					if (kornAsset) {
+						kornAsset.style.display = 'block';
+						kornAsset.style.animation = 'kornCircle 2s ease-in-out infinite';
+					}
+				} else if (href.includes('repop')) {
+					// Repop - show kasket asset
+					if (kasketAsset) {
+						kasketAsset.style.display = 'block';
+						kasketAsset.style.animation = 'kasketFall 0.8s ease-in-out forwards';
+					}
+				} else if (href.includes('kobajer')) {
+					// Købajer - show øldåse asset
+					if (oldaseAsset) {
+						oldaseAsset.style.display = 'block';
+						oldaseAsset.style.animation = 'oldaseAppear 0.5s ease-in-out forwards';
+					}
+				} else if (href.includes('Naturli')) {
+					// Naturli' - show bottle and drops
+					if (naturliAsset) {
+						naturliAsset.style.display = 'block';
+						naturliAsset.style.animation = 'naturliAppear 0.5s ease-in-out forwards';
+					}
+					if (dropsAsset) {
+						dropsAsset.style.display = 'block';
+						dropsAsset.style.animation = 'dropsAppear 0.5s ease-in-out forwards';
+					}
+				} else if (href.includes('twister')) {
+					// Twister - show twister asset
+					if (twisterAsset) {
+						twisterAsset.style.display = 'block';
+						twisterAsset.style.animation = 'twisterAppear 0.5s ease-in-out forwards';
+					}
+					// Playful expression
+					if (mouth) {
+						mouth.setAttribute('d', 'M35,58 Q50,63 65,58');
+					}
+				} else if (href.includes('unge-mod-uv')) {
+					// Unge mod UV - show asset
+					if (ungeModUvAsset) {
+						ungeModUvAsset.style.display = 'block';
+						ungeModUvAsset.style.animation = 'ungeModUvAppear 0.5s ease-in-out forwards';
+					}
+					// Happy expression
+					if (mouth) {
+						mouth.setAttribute('d', 'M35,58 Q50,65 65,58');
+					}
+				} else if (href.includes('brainfarts') || href.includes('project1')) {
+					// BRAINFARTS - embarrassed expression
+					if (mouth) {
+						mouth.setAttribute('d', 'M35,58 Q50,55 65,58');
+					}
+				}
+			});
+
+			node.addEventListener('mouseleave', function() {
+				const href = this.getAttribute('href');
+				const condomAsset = document.querySelector('.condom-asset');
+				const kornAsset = document.querySelector('.korn-asset');
+				const kasketAsset = document.querySelector('.kasket-asset');
+				const oldaseAsset = document.querySelector('.oldase-asset');
+				const naturliAsset = document.querySelector('.naturli-asset');
+				const dropsAsset = document.querySelector('.naturli-drops-asset');
+				const twisterAsset = document.querySelector('.twister-asset');
+				const ungeModUvAsset = document.querySelector('.unge-mod-uv-asset');
+				
+				// Hide all assets
+				[condomAsset, kornAsset, kasketAsset, oldaseAsset, naturliAsset, dropsAsset, twisterAsset, ungeModUvAsset].forEach(asset => {
+					if (asset) {
+						asset.style.display = 'none';
+						asset.style.animation = 'none';
+					}
+				});
+				
+				// Reset to normal expression
+				if (mouth) {
+					mouth.setAttribute('d', 'M38,58 Q50,61 62,58');
+				}
+			});
+		});
+
+		// Initialize
+		createFartClouds();
+		createAssets();
+		createConnectingLines();
+		document.addEventListener('mousemove', updatePupilPosition);
+		
+		// Recalculate on window resize
+		window.addEventListener('resize', () => {
+			setTimeout(createConnectingLines, 100);
+		});
+	}
+
+	// Initialize brain animations
+	initBrainAnimations();
 });
 
 // Ensure lazy video init runs after DOM is ready

@@ -268,6 +268,96 @@ body {
     transform-origin: right center;
 }
 
+.project-node:nth-child(8):hover { /* TWISTER hover - no movement */
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+.project-node:nth-child(8):hover::before { /* TWISTER hover pseudo-element - no movement */
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+.project-node:nth-child(8) { /* TWISTER base - no transitions */
+    transition: none !important;
+    animation: none !important;
+}
+
+.project-node:nth-child(8)::before { /* TWISTER pseudo-element - no transitions */
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Ultra-specific Twister tab fix - keep original position */
+a[href="twister.html"]:hover {
+    transform: translateX(-50%) !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+a[href="twister.html"]:hover *,
+a[href="twister.html"]:hover::before,
+a[href="twister.html"]:hover::after {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Ultra-specific Durex tab fix - keep original position */
+a[href="durex.html"]:hover {
+    transform: translateY(-50%) !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+a[href="durex.html"]:hover *,
+a[href="durex.html"]:hover::before,
+a[href="durex.html"]:hover::after {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Ultra-specific BRAINFARTS tab fix - keep original position */
+.project-node[href="project1.html"]:hover,
+a[href="project1.html"]:hover {
+    transform: translateY(-50%) !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+.project-node[href="project1.html"]:hover *,
+.project-node[href="project1.html"]:hover::before,
+.project-node[href="project1.html"]:hover::after,
+a[href="project1.html"]:hover *,
+a[href="project1.html"]:hover::before,
+a[href="project1.html"]:hover::after {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Ultra-specific Byens Landhandel tab fix - keep original position */
+.project-node[href="byens-landhandel.html"]:hover,
+a[href="byens-landhandel.html"]:hover {
+    transform: translateX(-50%) !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+.project-node[href="byens-landhandel.html"]:hover *,
+.project-node[href="byens-landhandel.html"]:hover::before,
+.project-node[href="byens-landhandel.html"]:hover::after,
+a[href="byens-landhandel.html"]:hover *,
+a[href="byens-landhandel.html"]:hover::before,
+a[href="byens-landhandel.html"]:hover::after {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
 /* Brain container positioning for mindmap effect */
 .brain {
     position: absolute;
@@ -275,6 +365,78 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 4;
+}
+
+/* Blush elements */
+.blush-left, .blush-right {
+    position: absolute;
+    width: 20px;
+    height: 15px;
+    background: radial-gradient(circle, rgba(255, 182, 193, 0.8) 0%, rgba(255, 182, 193, 0.4) 50%, transparent 100%);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 3;
+}
+
+.blush-left {
+    top: 60%;
+    left: 25%;
+}
+
+.blush-right {
+    top: 60%;
+    right: 25%;
+}
+
+/* Fart cloud animation */
+@keyframes fartFloat {
+    0%, 100% { transform: translateY(0px) scale(1); opacity: 0.6; }
+    50% { transform: translateY(-10px) scale(1.1); opacity: 0.8; }
+}
+
+/* Asset animations */
+@keyframes condomAppear {
+    0% { opacity: 0; transform: scale(0) rotate(0deg); }
+    100% { opacity: 1; transform: scale(1) rotate(33deg); }
+}
+
+@keyframes kornCircle {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes kasketFall {
+    0% { opacity: 0; transform: translateY(-50px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes oldaseAppear {
+    0% { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes naturliAppear {
+    0% { opacity: 0; transform: scaleX(1) scaleY(1); }
+    25% { opacity: 1; transform: scaleX(0.7) scaleY(1); }
+    50% { opacity: 1; transform: scaleX(1) scaleY(1); }
+    75% { opacity: 1; transform: scaleX(0.7) scaleY(1); }
+    100% { opacity: 1; transform: scaleX(1) scaleY(1); }
+}
+
+@keyframes dropsAppear {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes twisterAppear {
+    0% { opacity: 0; transform: scale(0) rotate(0deg); }
+    100% { opacity: 1; transform: scale(1) rotate(360deg); }
+}
+
+@keyframes ungeModUvAppear {
+    0% { opacity: 0; transform: translateX(-50px) scale(0); }
+    100% { opacity: 1; transform: translateX(0) scale(1); }
 }
 
 /* Ensure project nodes have proper z-index */
@@ -406,7 +568,7 @@ body {
 }
 
 .project-node:hover {
-    transform: scale(1.1);
+    transform: none !important;
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     background-color: transparent !important;
@@ -1665,7 +1827,7 @@ body .brainstorm-container .project-node:hover *,
 }
 
 .project-node:hover {
-    transform: translate(-50%, -50%) scale(1.1) !important;
+    transform: none !important;
 } 
 
 .eyes-smile {
