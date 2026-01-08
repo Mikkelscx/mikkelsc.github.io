@@ -271,13 +271,13 @@ document.addEventListener('DOMContentLoaded', function() {
 			currentSvg.appendChild(linje2Clone);
 		}
 		if (linje3Clone) {
-			currentSvg.appendChild(linje3Clone);
+			currentSvg.appendChild(linje3Clone); // Preserve any static linje 3.webp images if they exist
 		}
 		// Preserve all linje 4 images (multiple instances) - this includes KØ-BAJER line
 		linje4Clones.forEach(img => {
 			currentSvg.appendChild(img);
 		});
-		// Preserve all linje 8 images (TWISTER) - static HTML lines
+		// Preserve all linje 8 images (if any static HTML lines exist - BRAINFARTS uses linje 8 dynamically)
 		linje8Clones.forEach(img => {
 			currentSvg.appendChild(img);
 		});
@@ -314,12 +314,53 @@ document.addEventListener('DOMContentLoaded', function() {
 				return;
 			}
 			
-			// Skip BRAINFARTS - no line to brain
-			const nodeText = node.textContent.trim();
-			const nodeHref = node.getAttribute('href') || '';
-			if (nodeText === 'BRAINFARTS' || index === 4 || nodeHref.includes('brainfarts') || nodeHref.includes('project1')) {
-				console.log(`BRAINFARTS detected - skipping line creation`);
-				return; // Skip line creation for BRAINFARTS
+			// Special case: BRAINFARTS - render linje 8.webp asset line from brain center to node
+			const nodeTextBrainfarts = node.textContent.trim();
+			const nodeHrefBrainfarts = node.getAttribute('href') || '';
+			if (nodeTextBrainfarts === 'BRAINFARTS' || nodeHrefBrainfarts.includes('brainfarts') || nodeHrefBrainfarts.includes('project1')) {
+				console.log(`✓ BRAINFARTS detected at index ${index} - creating Linje 8.webp asset line`);
+				
+				// Start from the center of the brain
+				const brainStartX = centerX;
+				const brainStartY = centerY;
+				
+				// Calculate end point - extend closer to/past the BRAINFARTS node
+				const nodeRadius = Math.min(nodeRect.width, nodeRect.height) / 2;
+				const deltaX = nodeX - brainStartX;
+				const deltaY = nodeY - brainStartY;
+				const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY) || 1;
+				// Extend past the node center for a longer line
+				const extensionAmount = nodeRadius * 0.6; // Extend 60% of node radius past the center
+				const lineEndX = nodeX + (deltaX / distance) * extensionAmount;
+				const lineEndY = nodeY + (deltaY / distance) * extensionAmount;
+				
+				// Calculate rotation and length for the image asset
+				const angle = Math.atan2(lineEndY - brainStartY, lineEndX - brainStartX) * 180 / Math.PI;
+				const lineLength = Math.sqrt((lineEndX - brainStartX) ** 2 + (lineEndY - brainStartY) ** 2);
+				
+				console.log('BRAINFARTS Linje 8 details (from center):', { brainStartX, brainStartY, lineEndX, lineEndY, angle, lineLength });
+				
+				// Create image element for the line
+				const lineImage = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+				lineImage.setAttribute('href', 'assets/linje 8.webp');
+				lineImage.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 'assets/linje 8.webp'); // xlink:href for compatibility
+				lineImage.setAttribute('x', brainStartX);
+				lineImage.setAttribute('y', brainStartY - 150); // Offset by half height (300/2 = 150) to center on rotation point
+				lineImage.setAttribute('width', lineLength);
+				lineImage.setAttribute('height', '300');
+				lineImage.setAttribute('opacity', '1');
+				lineImage.setAttribute('preserveAspectRatio', 'none');
+				lineImage.setAttribute('transform', `rotate(${angle} ${brainStartX} ${brainStartY})`);
+				lineImage.classList.add('mindmap-line');
+				lineImage.style.pointerEvents = 'auto';
+				lineImage.style.display = 'block';
+				lineImage.style.visibility = 'visible';
+				lineImage.style.imageRendering = 'crisp-edges';
+				lineImage.style.filter = 'none';
+				
+				currentSvg.appendChild(lineImage);
+				console.log(`✓ BRAINFARTS linje 8.webp asset line created and added to SVG`);
+				return; // Skip the hand-drawn line creation for BRAINFARTS
 			}
 			
 			// Special case: KØ-BAJER - render linje 4.webp asset line from brain center to node
@@ -616,22 +657,58 @@ document.addEventListener('DOMContentLoaded', function() {
 				return; // Skip the hand-drawn line creation for NATURLI'
 			}
 			
-			// Special case: TWISTER - render linje 8.webp asset line from brain center to node
-			// NOTE: TWISTER line is now created statically in HTML, so skipping JavaScript creation
+			// Special case: TWISTER - render linje 3.webp asset line from brain center to node
 			const nodeTextTwister = node.textContent.trim();
 			const nodeHrefTwister = node.getAttribute('href') || '';
 			if (nodeTextTwister === 'TWISTER' || nodeHrefTwister.includes('twister')) {
-				console.log(`✓ TWISTER detected at index ${index} - skipping (using static HTML line)`);
-				return; // Skip further processing for TWISTER - using static HTML line instead
+				console.log(`✓ TWISTER detected at index ${index} - creating Linje 3.webp asset line`);
+				
+				// Start from outside the brain (add gap from brain center)
+				const brainRadius = Math.min(brainRect.width, brainRect.height) / 2;
+				const brainGapDistance = brainRadius * 0.6; // Start 60% of brain radius from center
+				const deltaX = nodeX - centerX;
+				const deltaY = nodeY - centerY;
+				const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY) || 1;
+				const brainStartX = centerX + (deltaX / distance) * brainGapDistance;
+				const brainStartY = centerY + (deltaY / distance) * brainGapDistance - 30; // Move line up by 30px
+				
+				// Calculate end point - extend to/past the TWISTER node
+				const nodeRadius = Math.min(nodeRect.width, nodeRect.height) / 2;
+				// Extend past the node center for a longer line
+				const extensionAmount = nodeRadius * 0.6; // Extend 60% of node radius past the center
+				const lineEndX = nodeX + (deltaX / distance) * extensionAmount;
+				const lineEndY = nodeY + (deltaY / distance) * extensionAmount - 30; // Move line up by 30px
+				
+				// Calculate rotation and length for the image asset
+				const angle = Math.atan2(lineEndY - brainStartY, lineEndX - brainStartX) * 180 / Math.PI;
+				const lineLength = Math.sqrt((lineEndX - brainStartX) ** 2 + (lineEndY - brainStartY) ** 2);
+				
+				console.log('TWISTER Linje 3 details (from center):', { brainStartX, brainStartY, lineEndX, lineEndY, angle, lineLength });
+				
+				// Create image element for the line
+				const lineImage = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+				lineImage.setAttribute('href', 'assets/linje 3.webp');
+				lineImage.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 'assets/linje 3.webp'); // xlink:href for compatibility
+				lineImage.setAttribute('x', brainStartX);
+				lineImage.setAttribute('y', brainStartY - 300); // Offset by half height (600/2 = 300) to center on rotation point
+				lineImage.setAttribute('width', lineLength);
+				lineImage.setAttribute('height', '600');
+				lineImage.setAttribute('opacity', '1');
+				lineImage.setAttribute('preserveAspectRatio', 'none');
+				lineImage.setAttribute('transform', `rotate(${angle} ${brainStartX} ${brainStartY})`);
+				lineImage.classList.add('mindmap-line');
+				lineImage.style.pointerEvents = 'auto';
+				lineImage.style.display = 'block';
+				lineImage.style.visibility = 'visible';
+				lineImage.style.imageRendering = 'crisp-edges';
+				lineImage.style.filter = 'none';
+				
+				currentSvg.appendChild(lineImage);
+				console.log(`✓ TWISTER linje 3.webp asset line created and added to SVG`);
+				return; // Skip the hand-drawn line creation for TWISTER
 			}
 			
-			// Skip hand-drawn lines for BRAINFARTS (should have been caught earlier, but double-check)
-			const nodeTextCheck = node.textContent.trim();
-			const nodeHrefCheck = node.getAttribute('href') || '';
-			if (nodeTextCheck === 'BRAINFARTS' || nodeHrefCheck.includes('brainfarts') || nodeHrefCheck.includes('project1')) {
-				console.log(`Skipping additional hand-drawn line for BRAINFARTS (no line created)`);
-				return;
-			}
+			// BRAINFARTS is already handled earlier with linje 8.webp asset line
 			
 			// DISABLED: Only use asset images, no hand-drawn paths - but asset images are created above
 			return;
