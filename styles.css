@@ -219,6 +219,58 @@ body {
 
 .mindmap-line {
     transition: all 0.3s ease;
+    /* Clear lines without blur - like Safari - crisp rendering */
+    filter: none;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: none;
+    /* Remove animation for clarity */
+    animation: none;
+}
+
+/* Hide any lines connecting to BRAINFARTS (left: 15%, top: 50%) */
+/* Lines that end near BRAINFARTS position (x2 around 15-20%, y2 around 50%) */
+.connecting-lines line[x2*="%"] {
+    /* Check if x2 ends near BRAINFARTS (15%) */
+}
+.connecting-lines line[x2="24.9%"],
+.connecting-lines line[x2="25.1%"],
+.connecting-lines line[x2*="24"],
+.connecting-lines line[x2*="25"] {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Hide paths that connect to BRAINFARTS area */
+.connecting-lines path[class*="mindmap"] {
+    /* Paths will be handled by JavaScript */
+}
+
+@keyframes handDrawnPulse {
+    0%, 100% { 
+        filter: 
+            drop-shadow(0 0 0.3px rgba(0,0,0,0.4)) 
+            drop-shadow(0 0.3px 0.6px rgba(0,0,0,0.3)) 
+            drop-shadow(0 0.6px 1px rgba(0,0,0,0.25))
+            drop-shadow(0 1px 1.5px rgba(0,0,0,0.2))
+            drop-shadow(0 1.5px 2.5px rgba(0,0,0,0.15))
+            drop-shadow(0 2.5px 4px rgba(0,0,0,0.1))
+            drop-shadow(0 4px 6px rgba(0,0,0,0.08));
+    }
+    50% { 
+        filter: 
+            drop-shadow(0 0 0.4px rgba(0,0,0,0.5)) 
+            drop-shadow(0 0.4px 0.8px rgba(0,0,0,0.4)) 
+            drop-shadow(0 0.8px 1.2px rgba(0,0,0,0.3))
+            drop-shadow(0 1.2px 2px rgba(0,0,0,0.25))
+            drop-shadow(0 2px 3px rgba(0,0,0,0.2))
+            drop-shadow(0 3px 5px rgba(0,0,0,0.15))
+            drop-shadow(0 5px 8px rgba(0,0,0,0.1));
+    }
 }
 
 .project-node:hover ~ .connecting-lines .mindmap-line {
@@ -305,7 +357,13 @@ a[href="twister.html"]:hover::after {
     animation: none !important;
 }
 
-/* Ultra-specific Durex tab fix - keep original position */
+/* Ultra-specific Durex tab fix - keep original position and allow wider text */
+a[href="durex.html"] {
+    max-width: 300px !important;
+    min-width: 300px !important;
+    white-space: normal !important;
+}
+
 a[href="durex.html"]:hover {
     transform: translateY(-50%) !important;
     transition: none !important;
@@ -339,6 +397,66 @@ a[href="project1.html"]:hover::after {
     animation: none !important;
 }
 
+/* BRAINFARTS - COMPLETELY DISABLE ALL HOVER EFFECTS */
+body .brainstorm-container .project-node[href="project1.html"]:hover,
+body .brainstorm-container a[href="project1.html"]:hover,
+.project-node[href="project1.html"]:hover,
+a[href="project1.html"]:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    transform: translateY(-50%) !important;
+    transition: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+    position: absolute !important;
+    left: 8% !important;
+    top: 50% !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* BRAINFARTS - Remove any ::after pseudo-elements */
+.project-node[href="project1.html"]::after,
+a[href="project1.html"]::after {
+    display: none !important;
+    content: none !important;
+}
+
+.project-node[href="project1.html"]:hover *,
+a[href="project1.html"]:hover * {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+/* NUCLEAR OPTION - Lock BRAINFARTS position completely */
+body .brainstorm-container .project-node[href="project1.html"],
+body .brainstorm-container a[href="project1.html"],
+.project-node[href="project1.html"],
+a[href="project1.html"] {
+    position: absolute !important;
+    left: 8% !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+body .brainstorm-container .project-node[href="project1.html"]:hover,
+body .brainstorm-container a[href="project1.html"]:hover,
+.project-node[href="project1.html"]:hover,
+a[href="project1.html"]:hover {
+    position: absolute !important;
+    left: 8% !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: none !important;
+    animation: none !important;
+}
+
 /* Ultra-specific Byens Landhandel tab fix - keep original position */
 .project-node[href="byens-landhandel.html"]:hover,
 a[href="byens-landhandel.html"]:hover {
@@ -356,6 +474,196 @@ a[href="byens-landhandel.html"]:hover::after {
     transform: none !important;
     transition: none !important;
     animation: none !important;
+}
+
+/* Two-page sketchbook theme for projects page */
+body.sketchbook-theme {
+    background: #8B4513; /* Brown book cover */
+    font-family: 'Courier New', monospace;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Left page */
+body.sketchbook-theme::before {
+    content: '';
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: 
+        /* Hand-drawn lines */
+        linear-gradient(transparent 0px, transparent 23px, #d0d0d0 23px, #d0d0d0 24px, transparent 24px),
+        linear-gradient(transparent 0px, transparent 25px, #e0e0e0 25px, #e0e0e0 26px, transparent 26px),
+        /* Paper texture */
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+        #f5f5f0;
+    background-size: 100% 25px, 100% 25px, 100% 100%, 100% 100%;
+    z-index: 1;
+    box-shadow: inset -2px 0 10px rgba(0,0,0,0.1);
+}
+
+/* Right page */
+body.sketchbook-theme::after {
+    content: '';
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: 
+        /* Hand-drawn lines */
+        linear-gradient(transparent 0px, transparent 24px, #d5d5d5 24px, #d5d5d5 25px, transparent 25px),
+        linear-gradient(transparent 0px, transparent 26px, #e0e0e0 26px, #e0e0e0 27px, transparent 27px),
+        /* Paper texture */
+        radial-gradient(circle at 80% 80%, rgba(0,0,0,0.02) 0%, transparent 50%),
+        #f5f5f0;
+    background-size: 100% 25px, 100% 25px, 100% 100%, 100% 100%;
+    z-index: 1;
+    box-shadow: inset 2px 0 10px rgba(0,0,0,0.1);
+}
+
+/* Red margin lines for both pages */
+body.sketchbook-theme .left-margin {
+    position: fixed;
+    left: 60px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #ff6b6b;
+    z-index: 2;
+    opacity: 0.7;
+}
+
+body.sketchbook-theme .right-margin {
+    position: fixed;
+    right: 60px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #ff6b6b;
+    z-index: 2;
+    opacity: 0.7;
+}
+
+/* Sketchbook project tabs - no border, will use SVG frames */
+body.sketchbook-theme .project-node {
+    background: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    font-family: 'Bradley Hand', 'Brush Script MT', 'Segoe Script', 'Comic Sans MS', cursive !important;
+    font-weight: bold !important;
+    color: #1a1a1a !important;
+    font-style: normal !important;
+    letter-spacing: 0.3px !important;
+    font-size: 1.2rem !important;
+    text-shadow: none !important;
+    transition: none !important;
+    /* Completely override the main project-node gradient background */
+    background: transparent !important;
+    background-image: none !important;
+    /* Add very subtle handwritten charcoal texture to text */
+    filter: 
+        blur(0.05px)
+        drop-shadow(0 0 0.05px rgba(0,0,0,0.15))
+        drop-shadow(0 0.05px 0.1px rgba(0,0,0,0.1));
+    /* Remove the ::after pseudo-element that creates the pink dot */
+}
+
+body.sketchbook-theme .project-node::after {
+    display: none !important;
+}
+
+/* Hide all ::before pseudo-elements for sketchbook theme */
+body.sketchbook-theme .project-node::before,
+body.sketchbook-theme .project-node:nth-child(2)::before,
+body.sketchbook-theme .project-node:nth-child(3)::before,
+body.sketchbook-theme .project-node:nth-child(4)::before,
+body.sketchbook-theme .project-node:nth-child(5)::before,
+body.sketchbook-theme .project-node:nth-child(6)::before,
+body.sketchbook-theme .project-node:nth-child(7)::before,
+body.sketchbook-theme .project-node:nth-child(8)::before {
+    display: none !important;
+}
+
+/* Additional override to ensure no background shows through */
+body.sketchbook-theme .project-node,
+body.sketchbook-theme .project-node * {
+    background: transparent !important;
+    background-image: none !important;
+}
+
+/* Force remove any remaining backgrounds or shadows */
+body.sketchbook-theme .project-node {
+    background: transparent !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    filter: none !important;
+    /* Additional aggressive overrides */
+    background-clip: border-box !important;
+    background-origin: border-box !important;
+    background-size: auto !important;
+    background-repeat: no-repeat !important;
+    background-attachment: scroll !important;
+    background-position: 0% 0% !important;
+}
+
+/* Remove any pseudo-element backgrounds */
+body.sketchbook-theme .project-node::before,
+body.sketchbook-theme .project-node::after {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+}
+
+/* Nuclear option - override everything */
+body.sketchbook-theme .project-node,
+body.sketchbook-theme .project-node *,
+body.sketchbook-theme .project-node::before,
+body.sketchbook-theme .project-node::after {
+    background: transparent !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    background-clip: border-box !important;
+    background-origin: border-box !important;
+    background-size: auto !important;
+    background-repeat: no-repeat !important;
+    background-attachment: scroll !important;
+    background-position: 0% 0% !important;
+    box-shadow: none !important;
+    filter: none !important;
+    text-shadow: none !important;
+    border-image: none !important;
+}
+
+/* Individual tab rotations for sketchbook effect */
+body.sketchbook-theme .project-node:nth-child(1) { transform: rotate(-1deg) !important; }
+body.sketchbook-theme .project-node:nth-child(2) { transform: translateX(-50%) rotate(1deg) !important; }
+body.sketchbook-theme .project-node:nth-child(3) { transform: rotate(-2deg) !important; }
+body.sketchbook-theme .project-node:nth-child(4) { transform: rotate(0.5deg) !important; }
+body.sketchbook-theme .project-node:nth-child(5) { transform: rotate(-1.5deg) !important; }
+body.sketchbook-theme .project-node:nth-child(6) { transform: rotate(2deg) !important; }
+body.sketchbook-theme .project-node:nth-child(7) { transform: rotate(-0.5deg) !important; }
+body.sketchbook-theme .project-node:nth-child(8) { transform: translateX(-50%) rotate(1.5deg) !important; }
+body.sketchbook-theme .project-node:nth-child(9) { transform: rotate(-1deg) !important; }
+
+/* Ensure tabs stay still on hover in sketchbook theme */
+body.sketchbook-theme .project-node:hover {
+    transform: inherit !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Sketchbook brain container */
+body.sketchbook-theme .brainstorm-container {
+    background: transparent;
+    border: 3px dashed #999;
+    border-radius: 15px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
 }
 
 /* Brain container positioning for mindmap effect */
@@ -464,7 +772,8 @@ a[href="byens-landhandel.html"]:hover::after {
     text-overflow: ellipsis;
     font-size: 1rem;
     line-height: 1.2;
-    z-index: 5;
+    z-index: 15;
+    pointer-events: auto !important;
 }
 
 .project-node::after {
@@ -1826,6 +2135,16 @@ body .brainstorm-container .project-node:hover *,
     transform-origin: center center !important;
 }
 
+/* Center Byens Landhandel horizontally */
+a[href="byens-landhandel.html"] {
+    left: 45% !important;
+    transform: translateX(-50%) !important;
+}
+
+a[href="byens-landhandel.html"]:hover {
+    transform: translateX(-50%) !important;
+}
+
 .project-node:hover {
     transform: none !important;
 } 
@@ -2055,6 +2374,70 @@ body .brainstorm-container .project-node:hover *,
 .contact-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* FINAL NUCLEAR OPTION - BRAINFARTS NO MOVEMENT */
+html body .brainstorm-container .project-node[href="project1.html"],
+html body .brainstorm-container a[href="project1.html"],
+html body .project-node[href="project1.html"],
+html body a[href="project1.html"] {
+    position: absolute !important;
+    left: 8% !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: none !important;
+    animation: none !important;
+    will-change: auto !important;
+}
+
+html body .brainstorm-container .project-node[href="project1.html"]:hover,
+html body .brainstorm-container a[href="project1.html"]:hover,
+html body .project-node[href="project1.html"]:hover,
+html body a[href="project1.html"]:hover {
+    position: absolute !important;
+    left: 8% !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: none !important;
+    animation: none !important;
+    will-change: auto !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+/* BRAINFARTS image hover effects */
+.brainfarts-image:hover {
+    opacity: 1.0 !important;
+    filter: brightness(1.2) drop-shadow(0 6px 12px rgba(0,0,0,0.4)) !important;
+    transform: scale(1.05) !important;
+    transition: all 0.3s ease !important;
+}
+
+/* BRAINFARTS - FAINT TEXT HOVER EFFECT */
+.brainstorm-container a[href="project1.html"]:hover {
+    background: #8B4513 !important;
+    color: rgba(26, 26, 26, 0.3) !important;
+    border-radius: 50% !important;
+    width: 200px !important;
+    height: 200px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: -100px !important;
+    margin-top: -100px !important;
+    position: absolute !important;
+    left: 8% !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: all 0.3s ease !important;
+    z-index: 10 !important;
+    opacity: 0.8 !important;
 }
 
 .contact-item h3 {
